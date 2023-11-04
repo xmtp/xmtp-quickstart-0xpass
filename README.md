@@ -16,25 +16,67 @@ https://github.com/fabriguespe/xmtp-quickstart-pwa-0xPass/blob/main/public/video
 First, you need to import the necessary libraries and components. In your index.js file, import the `WagmiConfig` from `wagmi` and wrap your main component with it.
 
 ```jsx
-import { ConnectButton } from "0xpass";
-import { WagmiConfig } from "wagmi";
-import { arbitrum, mainnet } from "wagmi/chains";
+import "0xpass/styles.css";
+import { PassProvider, connectorsForWallets, createClient } from "0xpass";
+import { configureChains, createConfig, WagmiConfig } from "wagmi";
+import { mainnet, polygon, optimism, arbitrum, goerli } from "wagmi/chains";
+import { publicProvider } from "wagmi/providers/public";
+import Page from "./Page";
+import {
+  metaMaskWallet,
+  rainbowWallet,
+  emailMagicWallet,
+  ledgerWallet,
+} from "0xpass/wallets";
 
-// 1. Get projectId
-const projectId = "projectId";
+const { chains, publicClient, webSocketPublicClient } = configureChains(
+  [
+    mainnet,
+    ...(process.env.REACT_APP_ENABLE_TESTNETS === "true" ? [goerli] : []),
+  ],
+  [publicProvider()]
+);
 
-// 2. Create wagmiConfig
-const metadata = {
-  name: "Web3Modal",
-  description: "Web3Modal Example",
-  url: "https://web3modal.com",
-  icons: ["https://avatars.githubusercontent.com/u/37784886"],
-};
+// all configs here
+const connectWalletProjectId = ""; //obtained from https://cloud.walletconnect.com/sign-in
+const OxpassApiKey = ""; //enter your 0xpass key obtained from https://0xpass.io/register
+const magicPublicKey = ""; //obtained from https://dashboard.magic.link/signup
 
-const chains = [mainnet, arbitrum];
-const wagmiConfig = defaultWagmiConfig({ chains, projectId, metadata });
+const connectors = connectorsForWallets([
+  {
+    groupName: "Social",
+    wallets: [emailMagicWallet({ apiKey: magicPublicKey, chains })],
+  },
+  {
+    groupName: "EOA",
+    wallets: [
+      metaMaskWallet({ projectId: connectWalletProjectId, chains }),
+      rainbowWallet({ projectId: connectWalletProjectId, chains }),
+      ledgerWallet({ projectId: connectWalletProjectId, chains }),
+    ],
+  },
+]);
 
-createWeb3Modal({ wagmiConfig, projectId, chains });
+const wagmiConfig = createConfig({
+  connectors,
+  publicClient,
+  webSocketPublicClient,
+});
+
+const passClient = createClient({
+  apiKey: OxpassApiKey,
+  chains,
+});
+
+export default function App({ Component, pageProps }) {
+  return (
+    <WagmiConfig config={wagmiConfig}>
+      <PassProvider client={passClient}>
+        <Page />
+      </PassProvider>
+    </WagmiConfig>
+  );
+}
 ```
 
 ```jsx
