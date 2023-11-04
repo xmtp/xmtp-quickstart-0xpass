@@ -1,12 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FloatingInbox } from "./FloatingInbox-hooks";
 import { ConnectButton } from "0xpass";
+import { useUser } from "0xpass";
 import { useAccount, useWalletClient } from "wagmi";
 import { disconnect } from "@wagmi/core";
 
 const Page = () => {
   const { data: walletClient } = useWalletClient();
-  const { address, isDisconnected } = useAccount();
+  const { address, isDisconnected, isConnecting, isConnected, status } =
+    useAccount();
+  const { getUser, loading } = useUser();
   const [loggingOut, setLoggingOut] = useState(false); // Add this line
 
   const handleLogout = async () => {
@@ -15,6 +18,37 @@ const Page = () => {
     console.log("Logging out...");
     setLoggingOut(false);
   };
+
+  useEffect(() => {
+    if (isDisconnected) {
+      console.log("isDisconnected", isDisconnected);
+    }
+    if (address) {
+      console.log("address", address);
+    }
+    if (walletClient) {
+      console.log("walletClient", walletClient);
+    }
+    if (getUser) {
+      console.log("getUser", getUser);
+    }
+    if (isConnected) {
+      console.log("isConnected", isConnected);
+    }
+    if (isConnecting) {
+      console.log("isConnecting", isConnecting);
+    }
+    if (status) {
+      console.log("status", status);
+    }
+  }, [
+    isDisconnected,
+    address,
+    walletClient,
+    isConnecting,
+    status,
+    isConnected,
+  ]);
 
   const isPWA = true;
   const styles = {

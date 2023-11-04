@@ -104,6 +104,7 @@ export default function Home({ wallet, env, isPWA = false, onLogout }) {
       display: "flex",
       alignItems: "center",
       textDecoration: "none",
+      cursor: "hand",
       color: "#000",
       justifyContent: "center",
       border: "1px solid grey",
@@ -164,10 +165,12 @@ export default function Home({ wallet, env, isPWA = false, onLogout }) {
   };
 
   const initXmtpWithKeys = async () => {
+    console.log("ja");
     const options = {
       env: env ? env : getEnv(),
     };
     const address = await getAddress(signer);
+    console.log(address, signer);
     if (!address) return;
     let keys = loadKeys(address);
     if (!keys) {

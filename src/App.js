@@ -14,6 +14,10 @@ import {
 const { chains, publicClient, webSocketPublicClient } = configureChains(
   [
     mainnet,
+    polygon,
+    optimism,
+    arbitrum,
+    goerli,
     ...(process.env.REACT_APP_ENABLE_TESTNETS === "true" ? [goerli] : []),
   ],
   [publicProvider()]
