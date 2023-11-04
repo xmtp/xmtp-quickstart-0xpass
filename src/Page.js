@@ -19,37 +19,6 @@ const Page = () => {
     setLoggingOut(false);
   };
 
-  useEffect(() => {
-    if (isDisconnected) {
-      console.log("isDisconnected", isDisconnected);
-    }
-    if (address) {
-      console.log("address", address);
-    }
-    if (walletClient) {
-      console.log("walletClient", walletClient);
-    }
-    if (getUser) {
-      console.log("getUser", getUser);
-    }
-    if (isConnected) {
-      console.log("isConnected", isConnected);
-    }
-    if (isConnecting) {
-      console.log("isConnecting", isConnecting);
-    }
-    if (status) {
-      console.log("status", status);
-    }
-  }, [
-    isDisconnected,
-    address,
-    walletClient,
-    isConnecting,
-    status,
-    isConnected,
-  ]);
-
   const isPWA = true;
   const styles = {
     uContainer: {
@@ -84,20 +53,23 @@ const Page = () => {
 
   return (
     <div style={styles.uContainer}>
-      {isDisconnected && (
+      {
         <div style={styles.xmtpContainer}>
           <ConnectButton />
         </div>
-      )}
-      {!isDisconnected && walletClient && (
-        <FloatingInbox
-          isPWA={isPWA}
-          wallet={walletClient}
-          onLogout={handleLogout}
-        />
-      )}
+      }
     </div>
   );
 };
 
 export default Page;
+/*
+Hide it for now until i get the correct hook
+ {!isDisconnected && walletClient && (
+         <FloatingInbox
+           isPWA={isPWA}
+           wallet={walletClient}
+           onLogout={handleLogout}
+         />
+       )}
+       */
