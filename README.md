@@ -1,4 +1,4 @@
-# XMTP PWA with WalletConnect & Wagmi
+# XMTP PWA with 0xPass & Wagmi
 
 ### Installation
 
@@ -7,16 +7,16 @@ bun install
 bun start
 ```
 
-This tutorial will guide you through the process of creating an XMTP app with WalletConnect & Wagmi.
+This tutorial will guide you through the process of creating an XMTP app with 0xPass & Wagmi.
 
-https://github.com/fabriguespe/xmtp-quickstart-pwa-walletconnect/blob/main/public/video.mp4
+https://github.com/fabriguespe/xmtp-quickstart-pwa-0xPass/blob/main/public/video.mp4
 
 ### Step 1: Setup
 
 First, you need to import the necessary libraries and components. In your index.js file, import the `WagmiConfig` from `wagmi` and wrap your main component with it.
 
 ```jsx
-import { createWeb3Modal, defaultWagmiConfig } from "@web3modal/wagmi/react";
+import { ConnectButton } from "0xpass";
 import { WagmiConfig } from "wagmi";
 import { arbitrum, mainnet } from "wagmi/chains";
 
@@ -48,7 +48,12 @@ createWeb3Modal({ wagmiConfig, projectId, chains });
 In your main component, use the `useAccount` hook to get the user's authentication status and other details.
 
 ```jsx
+import { useAccount, useWalletClient } from "wagmi";
 const { address, isConnecting, isDisconnected } = useAccount();
+
+//For disconnecting
+import { disconnect } from "@wagmi/core";
+await disconnect();
 ```
 
 ### Step 3: Wallet Integration
@@ -103,8 +108,9 @@ const handleLogout = async () => {
   localStorage.removeItem("isConnected");
   if (typeof onLogout === "function") {
     onLogout();
+    //Calls wagmi `await disconnects()`
   }
 };
 ```
 
-That's it! You've now created an XMTP app with WalletConnect & Wagmi.
+That's it! You've now created an XMTP app with 0xPass & Wagmi.
