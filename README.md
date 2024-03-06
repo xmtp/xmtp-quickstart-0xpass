@@ -27,7 +27,7 @@ If you get into issues with `Buffer` and `polyfills` check out the fix below:
 
 ## 0xPass
 
-### Step 1: Setup
+### Setup
 
 First, you need to import the necessary libraries and components. In your index.js file, import the `WagmiConfig` from `wagmi` and wrap your main component with it.
 
@@ -101,7 +101,7 @@ export default function App({ Component, pageProps }) {
 </WagmiConfig>
 ```
 
-### Step 2: User Authentication
+### User authentication
 
 In your main component, use the `useAccount` hook to get the user's authentication status and other details.
 
@@ -122,53 +122,6 @@ Use the `useWalletClient` hook to get the user's wallets. Then, find the embedde
 //This is the signer to send to the xmtp client
 const { data: walletClient } = useWalletClient();
 await initialize({ keys, options, signer /*: walletClient*/ });
-```
-
-### Step 4: XMTP Integration
-
-In your `Home` component, use the `useClient` hook from `@xmtp/react-sdk` to get the XMTP client.
-
-```jsx
-const { client, error, isLoading, initialize } = useClient();
-```
-
-### Step 5: Message Handling
-
-In your `MessageContainer` component, use the `useMessages` and `useSendMessage` hooks from `@xmtp/react-sdk` to get the messages and send messages.
-
-```jsx
-const { messages, isLoading } = useMessages(conversation);
-const { sendMessage } = useSendMessage();
-```
-
-### Step 6: Conversation Handling
-
-In your ListConversations component, use the useConversations and useStreamConversations hooks from @xmtp/react-sdk to get the conversations and stream new conversations.
-
-```jsx
-const { conversations } = useConversations();
-const { error } = useStreamConversations(onConversation);
-```
-
-### Step 7: Logout Handling
-
-Finally, handle the logout process by setting the isConnected state to false, wiping the keys, and removing the signer.
-
-```jsx
-const handleLogout = async () => {
-  setIsConnected(false);
-  const address = await getAddress(signer);
-  wipeKeys(address);
-  setSigner(null);
-  setIsOnNetwork(false);
-  setSelectedConversation(null);
-  localStorage.removeItem("isOnNetwork");
-  localStorage.removeItem("isConnected");
-  if (typeof onLogout === "function") {
-    onLogout();
-    //Calls wagmi `await disconnects()`
-  }
-};
 ```
 
 That's it! You've now created an XMTP app with 0xPass & Wagmi.
